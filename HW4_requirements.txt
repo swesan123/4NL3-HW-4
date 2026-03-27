@@ -1,0 +1,135 @@
+COMPSCI 4NL3 — Homework 4 (Pretrained Transformers) — Requirements (condensed)
+Due: March 28 (Winter 2026)
+
+## Goal
+Experiment with multiple classification approaches using pretrained transformer models (HuggingFace) and language models, and compare against classic baselines.
+
+## Work on TWO tasks (datasets)
+- Task A (assigned): do ALL steps below (fine-tune + zero-shot + baselines + report).
+- Task B (your choice): you may SKIP baselines (§3.3), but must do EITHER:
+  - Fine-tuning (§3.1) OR
+  - Zero-shot (§3.2)
+  (you do NOT have to do both for Task B, but you may.)
+
+## Step-by-step checklist (assigned task)
+### 1) Dataset familiarization
+- Get the dataset for your assigned group (Avenue: “Group Assignments A4.txt”).
+- Understand label space, class balance, text fields, train/test splits (if any).
+
+### 2) Fine-tune TWO pretrained transformer models (§3.1)
+- Pick 2 different pretrained transformer models (examples: BERT, RoBERTa, DistilBERT, DeBERTa, T5, Electra, ModernBERT, etc.).
+- Constraint: models must NOT already be fine-tuned on *your exact task/dataset*.
+  - You may use models fine-tuned on other tasks, but verify there’s no overlap with your task.
+- Hardware note: avoid multi-billion parameter models on free Colab; “BERT-base sized” is typical; distilled/small/tiny variants are ok.
+- Data split rule:
+  - If dataset has no predefined split (or everything is in train), create your own:
+    - 80% train / 20% test
+    - (optional) 80/10/10 train/val/test if tuning hyperparams
+- Train on train split, predict on test split.
+- Report “appropriate evaluation metrics” for your task.
+  - Note: you can compute metrics locally for train/val, but test-set evaluation may rely on the Colab leaderboard (per PDF).
+
+### 3) Zero-shot classification with language models (§3.2)
+- Use prompt engineering to get a pretrained generative LM to output class labels (no fine-tuning).
+- Use training examples to craft prompts; try multiple prompts; pick the best prompt and use ONLY that prompt on the test set.
+- Option (local model): instead of generating text, you may compare next-token probabilities:
+  - Choose label via higher P(label_token | prompt), e.g., P(yes|prompt) vs P(no|prompt)
+- Use TWO different models for zero-shot.
+  - HuggingFace text-generation models are allowed (watch memory requirements).
+  - Allowed alternatives: optimized local runners like Llama.cpp; or Cloud API LLMs (GPT-4 / Gemini), but not free.
+  - DO NOT do manual chat copy/paste per test example; use code + APIs.
+  - Another mentioned option: NLI-based zero-shot classification (as per referenced method in PDF).
+- Evaluate on test data using the SAME metrics used for fine-tuning so results are comparable.
+
+### 4) Baselines (§3.3)
+- Train a bag-of-words (BoW) classifier using scikit-learn (or similar).
+  - Allowed features: TF-IDF, word vectors, other non-neural features.
+  - Not allowed: neural models with recurrence or attention.
+  - Allowed model families: logistic regression, naive bayes, SVM, etc.
+- Also compute simple sanity baselines:
+  - Majority-class baseline (predict most frequent label)
+  - Random baseline (random label)
+  - If leaderboard uses single-class F1: consider “target-class baseline” (always predict target/positive class)
+- Compare your models against these baselines; choose the most competitive/simple baselines for your task context.
+
+## Deliverables (what to submit)
+### Submit
+- A single Jupyter notebook (use the provided template) via Avenue.
+
+### Grading
+- Code: 40%
+- Discussion/analysis/findings: 60%
+- Code component breakdown:
+  - Fine-tuning code (§3.1): 15%
+  - Zero-shot code (§3.2): 15%
+  - Baseline code (§3.3): 10%
+
+## Code requirements (§4.1)
+- Python code, with enough documentation/instructions that someone else can run it.
+- Specify your Python version.
+- Ensure file read/write uses UTF-8.
+- If using special tooling (e.g., Llama.cpp), document it + how TAs can run it.
+- You may reuse snippets from class/online/AI tools, but:
+  - Provide proper attribution for code you didn’t write.
+  - Follow syllabus requirements for reporting AI tool usage.
+  - Do NOT copy an entire prior solution.
+- You do NOT need end-to-end automation for everything (e.g., tables/figures can be made in external tools), but the notebook should show how you implemented the modeling steps.
+
+## Discussion/report requirements (§4.2) — what you must write in the notebook
+Your notebook should have well-organized, professional sections covering:
+
+1) Fine-tuned models (10%)
+- Describe the two selected models and fine-tuning steps.
+- Include parameter counts for each model.
+- Discuss:
+  - pretraining dataset(s)
+  - compute used for pretraining (if available; may require searching), e.g., “10 RTX 8000 for 24 hours”
+
+2) Zero-shot classification (10%)
+- For each model:
+  - size (params)
+  - pretraining data
+  - compute used to pretrain (if available)
+- Describe your prompt(s):
+  - what you tried
+  - what you chose for test
+  - why other prompts didn’t work well
+
+3) Baselines (5%)
+- Describe baseline setup with enough detail to reproduce.
+
+4) Results (15%)
+- Provide a results table with ALL approaches.
+- “In the end, you should have 7 rows”:
+  - 2 fine-tuned models
+  - 2 zero-shot models
+  - 1 BoW approach
+  - 2 simple baselines (random + majority class)
+- Columns: one per evaluation metric you computed.
+- Provide analysis/observations beyond restating the table.
+- Share your results with your group members (copy/screenshot from notebook) for final report writing.
+
+5) Secondary task (10%)
+- For the second chosen dataset/task:
+  - describe what you did (fine-tune, zero-shot, or both)
+  - report how it performed vs provided baselines
+
+6) Reflection (10%)
+- What you learned
+- What was unexpected
+- Challenges and how you overcame them
+
+## Quality / submission constraints
+- Notebook must open (not corrupted/encrypted/damaged).
+- Avoid blurry/low-res/poorly-cropped screenshots; avoid “one long paragraph” with no formatting.
+
+## Compute resources (optional)
+- Additional GPUs available via:
+  - Dept servers (VPN/campus network; check usage with nvidia-smi; be considerate)
+  - Google Cloud Platform credits (free credits available; consider saving for final project)
+
+## Help / academic integrity
+- Use Teams channel for questions.
+- Discuss ideas with classmates, but do not share code or reuse data.
+- If you use generative AI, you must report it per syllabus; unreported AI use may result in 0.
+

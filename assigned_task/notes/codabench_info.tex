@@ -1,0 +1,100 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+\title{Genre no Jutsu: Anime Genre Classifier --- CodaBench Notes}
+\author{COMPSCI 4NL3 HW4 (Group 28)}
+\date{March 27, 2026}
+
+\begin{document}
+\maketitle
+
+\section{Competition Link}
+\begin{itemize}[leftmargin=*]
+  \item CodaBench competition: \url{https://www.codabench.org/competitions/14904/}
+  \item Benchmark name: \textbf{Genre no Jutsu!} (anime genre multi-label classification)
+\end{itemize}
+
+\section{Task Overview}
+\begin{itemize}[leftmargin=*]
+  \item Predict anime \textbf{genre tags} from text features: title/name(s) and synopsis.
+  \item \textbf{Multi-label classification}: each anime can have multiple genres (e.g., Action, Fantasy, Romance).
+\end{itemize}
+
+\section{Data Source and Preparation (as described on CodaBench)}
+\begin{itemize}[leftmargin=*]
+  \item Based on a modified version of \emph{Anime Dataset 2023} (Sajid Uddin) from Kaggle.
+  \item Original file: \texttt{anime-dataset-2023.csv} with 24{,}905 anime entries.
+  \item Kept columns:
+  \begin{itemize}
+    \item \texttt{anime\_id}: unique integer identifier
+    \item \texttt{Name}: anime name in original language
+    \item \texttt{English name}: English name if available, else \texttt{UNKNOWN}
+    \item \texttt{Synopsis}: description/summary
+    \item \texttt{Genres}: comma-separated genre string (target labels)
+  \end{itemize}
+  \item Filtering: removed entries with explicit/blank/unknown genres (one or more in \texttt{Genres}).
+  \item Resulting dataset size: \textbf{17{,}633} instances.
+\end{itemize}
+
+\section{Splits}
+\begin{itemize}[leftmargin=*]
+  \item Training: \textbf{70\%}
+  \item Validation (Development phase evaluation): \textbf{15\%}
+  \item Testing (Final/Testing phase evaluation): \textbf{15\%} (held-out)
+\end{itemize}
+
+\section{Evaluation Metrics}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Accuracy (ACC)}: strict exact match of the full predicted genre set.
+  \item \textbf{Micro-F1}
+  \item \textbf{Macro-F1}
+  \item \textbf{ROC-AUC}
+  \item \textbf{Jaccard Index (IoU)}: overlap/partial credit for predicted vs ground-truth genre sets.
+  \item Metrics are computed automatically upon submission for both Development and Testing phases.
+\end{itemize}
+
+\section{Participation / Submission Format (platform notes)}
+\begin{itemize}[leftmargin=*]
+  \item Submissions are \textbf{code-based}, not CSV predictions:
+  \item Submit an \textbf{untrained} model implementation in a Python file \texttt{model.py} containing a class \texttt{Model}.
+  \item The platform imports, trains, and evaluates your model.
+  \item Expected class interface (from ``Seed'' page):
+  \begin{itemize}
+    \item \texttt{\_\_init\_\_(self)}
+    \item \texttt{fit(self, X, y)} where \(X\) is an \(M \times 4\) \texttt{np.array} of features/metadata and \(y\) is \(M \times 1\).
+    \item \texttt{predict(self, X)} returns \(M \times 1\) predictions for the input \(X\).
+  \end{itemize}
+  \item Environment note (as shown on competition page): Docker image \texttt{codalab/codalab-legacy:py37}.
+\end{itemize}
+
+\section{Phases / Timeline (as described on CodaBench)}
+\begin{itemize}[leftmargin=*]
+  \item Two phases: \textbf{Development} and \textbf{Testing}.
+  \item Development phase:
+  \begin{itemize}
+    \item Train on Training split; validate against Validation split.
+    \item Submission limits: up to \textbf{10/day} and \textbf{100 total} submissions.
+  \end{itemize}
+  \item Testing phase:
+  \begin{itemize}
+    \item Preferred model(s) submitted during Development are evaluated on a held-out test set.
+  \end{itemize}
+\end{itemize}
+
+\section{Provided Baselines (listed on Development leaderboard)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Logistic Regression baseline}:
+  \begin{itemize}
+    \item \texttt{sklearn.feature\_extraction.text.CountVectorizer} + \texttt{sklearn.linear\_model.LogisticRegression}.
+    \item Trained on Training split; same vectorizer used at prediction time.
+  \end{itemize}
+  \item \textbf{Majority baseline}:
+  \begin{itemize}
+    \item Predicts the most common \emph{singular} genre from the Training split for every instance.
+  \end{itemize}
+\end{itemize}
+
+\end{document}
+

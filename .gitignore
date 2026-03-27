@@ -1,0 +1,21 @@
+## Data / downloads (keep out of git)
+dev/
+test/
+assigned_task/data/raw/
+
+## Large documents
+Homework 4.pdf
+
+## Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+## Virtual envs
+.venv/
+venv/
+env/
+
